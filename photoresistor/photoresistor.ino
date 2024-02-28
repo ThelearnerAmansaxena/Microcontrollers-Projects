@@ -1,5 +1,5 @@
 // In this project i connected a LDR(photoresistor) with led and reading the voltage drop across ldr using arduino
-// if the amount of light falling increase the lcd glows more and lcd display show in increase by +
+// if the amount of light falling increase the led glows more and lcd display show in increase by +
 
 
 
