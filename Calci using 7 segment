@@ -1,0 +1,395 @@
+volatile char *portf,*outf,*portk,*outk,*porta,*portc,*rowa,*colc,temp =0x3F,out = 0x3F,temp1,temp2;
+int a=0,b=0,track=0,choice=0,c=0,num1=0,num2=0,d=0,result=0,start=0,resultSize=0,Echeck=0;
+void setup() {
+  
+  Serial.begin(9600);
+
+  //ports setup
+  porta = 0x21;
+  portc = 0x27;
+  *porta = 0xFF;
+  *portc = 0x00;
+  rowa = 0x22;
+  colc = 0x26;
+  portk = 0x107;
+  outk = 0x108;
+  portf = 0x30;
+  outf = 0x31;
+  *portf = 0xFF;
+  *portk = 0xFF;
+}
+//delay function
+void Delay(){
+
+for(volatile long int j=0;j<90000;j++);
+return;
+}
+
+// process key
+void processKey(int value){
+if(track==0 && choice==0){
+    a = value;
+    num1 = a;
+  }
+  if(track==1 && choice==0){
+    b = value;
+    num1 = a*10+b;
+  }
+
+  if(track==2 && choice==0){
+    c = value;
+    num1 = 100*a + 10*b +c;
+  }
+  if(track==3 && choice==0){
+    d = value;
+    num1 = 1000*a + 100*b + 10*c + d;
+
+  }
+
+  if(track==0 && choice!=0){
+    a = value;
+    num2 = a;
+  }
+   if(track==1 && choice!=0){
+    b = value;
+    num2 = a*10 +b;
+  }
+   if(track==2 && choice!=0){
+    c = value;
+    num2 = 100*a +10*b +c;
+  }
+   if(track==3 && choice!=0){
+    d = value;
+    num2 = 1000*a +100*b + 10*c +d;
+  }
+  return;
+}
+
+
+void row1(){
+*rowa = 0x01;
+switch(*colc){
+
+  case 0x01:
+  processKey(1);
+  track++;
+  Delay();
+  break;
+
+  case 0x02:
+  processKey(2);
+  track++;
+  Delay();
+  break;
+
+  case 0x04:
+  processKey(3);
+  track++;
+  Delay();
+  break;
+ 
+  case 0x08:
+  choice =1;
+  track=0;
+  break;
+}
+
+  return;
+}
+
+void row2(){
+*rowa = 0x02;
+switch(*colc){
+
+  case 0x01:
+  processKey(4);
+  track++;
+  Delay();
+  break;
+
+  case 0x02:
+  processKey(5);
+  track++;
+  Delay();
+  break;
+
+  case 0x04:
+  processKey(6);
+  track++;
+  Delay();
+  break;
+  
+  case 0x08:
+  choice =2;
+  track=0;
+  break;
+
+}
+return;
+}
+
+void row3(){
+*rowa = 0x04;
+switch(*colc){
+  case 0x01:
+  processKey(7);
+  track++;
+  Delay();
+  break;
+
+  case 0x02:
+  processKey(8);
+  track++;
+  Delay();
+  break;
+
+  case 0x04:
+  processKey(9);
+  track++;
+  Delay();
+  break;
+
+ case 0x08:
+ choice =3;
+ track=0;
+ break;
+
+
+}
+return;
+}
+
+void row4(){
+*rowa = 0x08;
+switch(*colc){
+  
+  case 0x01:
+  choice = 5;
+  track=0;
+  break;
+
+  case 0x02:
+  processKey(0);
+  track++;
+  Delay();
+  break;
+
+  case 0x04:
+  if( choice!=0){
+    start =1;
+  }  
+  break;
+  case 0x08:
+  choice =4;
+  track=0;
+}
+return;
+}
+// print numbers  on quad  7 segment
+void toSwitch(int switchingVar,int outkValue){
+
+switch(switchingVar){
+  
+      case 0:
+      *outk = outkValue;
+      *outf = 0x3F;
+      temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+
+      break; 
+
+      case 1:
+      *outk = outkValue;
+      *outf = 0x06;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 2:
+      *outk = outkValue;
+      *outf = 0x5B;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 3:
+      *outk = outkValue;
+      *outf = 0x4F;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 4:
+      *outk = outkValue;
+      *outf = 0x66;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 5:
+      *outk = outkValue;
+      *outf = 0x6D;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 6:
+      *outk = outkValue;
+      *outf = 0x7D;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+      
+      case 7:
+      *outk = outkValue;
+      *outf = 0x07;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 8:
+      *outk = outkValue;
+      *outf = 0x7F;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+
+      case 9:
+      *outk = outkValue;
+      *outf = 0x67;
+       temp=*outf;
+      for(int i=0;i<100;i++);
+      *outk = 255;
+      *outf = 0x00;
+      for(int i=0;i<100;i++);
+      break;
+    }
+return;
+}
+
+void loop() {
+if(choice==1 && start ==1){
+  
+  result = num1 + num2;
+}
+if(choice==2 && start ==1){
+  result = num1 - num2;
+  
+}
+if(choice==3 && start ==1){
+  result = num1 * num2;
+  
+}
+if(choice==4 && start ==1){
+  result = num1 / num2;
+  
+}
+if(choice==5 && start ==1){
+  result = num1 % num2;
+  
+}
+  if(choice ==0){
+    Serial.println(num1);
+  }
+  else{
+    
+   Serial.println(num2);
+  }
+
+
+  
+  if(start==1){
+    
+    //for 5 or more digits
+  if(result/10000!=0){
+    Echeck =1;
+    *outk = 0x00;
+    *outf = 121;
+    
+  }
+  // for 4 digits
+  if(Echeck!=1){
+    if(result/1000!=0){
+      resultSize = 4;
+    a = result/1000;
+    b = result/100;
+    b = b%10;
+    c = result/10;
+    c = c%10;
+    d = result%10;
+    }
+    // for 3 digits
+    if(result/100!=0 && result/1000==0){
+      resultSize =3;
+      a = result/100;
+      b = result/10;
+      b = b%10;
+      c = result%10;
+    }
+
+// for 2 digits
+    if(result/100==0){
+      resultSize = 2;
+      a = result / 10;
+      b = result % 10;
+      // Serial.println(result);
+
+    }
+    // for 1 digit
+    if(result/10==0){
+      resultSize=1;
+     a = result;
+     
+    
+    }
+    if(resultSize >=0){
+      toSwitch(a,254);
+    }
+// switch b
+if(resultSize>=2){
+  toSwitch(b,253);
+}
+// switch c 
+if(resultSize>=3){
+toSwitch(c,251);
+}
+//switch d
+if(resultSize==4){
+toSwitch(d,247);
+}
+
+  }
+  }
+  
+row1();
+row2();
+row3();
+row4();
+}
