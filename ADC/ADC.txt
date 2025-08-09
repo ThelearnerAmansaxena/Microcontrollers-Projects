@@ -1,0 +1,41 @@
+void timerSetup() {
+    // Configure Timer1 for Fast PWM mode, non-inverted, 8-bit resolution
+    TCCR1A = (1 << WGM10) |(1<<COM1A0)|(1 << COM1A1)|(1<<WGM11);  // Fast PWM 10 BIT, non-inverted mode
+    TCCR1B = (1 << WGM12)  | (1 << CS11) |(1<<CS10);  // Prescaler = 64
+    
+    ICR1 = 1023; // FREQUENCY 250HZ  
+    OCR1A= 300;  //INITIAL dutyCycle
+    
+}
+
+void setup() {
+    // Set PORTB pin 1 (OC1A) as output for PWM
+    DDRB |= (1 << PB1);
+
+    // Initialize Serial communication
+    Serial.begin(9600);
+
+    // Setup the timer
+    timerSetup();
+
+    // Configure ADC
+    ADMUX = 0x00;  // Use ADC0, Vref = AVcc
+    ADCSRB = 0x00;  // Free-running mode
+    ADCSRA |= (1 << ADEN) | (1 << ADATE) | (1 << ADIE) | (1 << ADPS2);
+
+    // Start the first ADC conversion
+    ADCSRA |= (1 << ADSC);
+}
+
+void loop() {
+    // Main loop remains empty; all work is done in interrupts
+}
+
+ISR(ADC_vect) {
+    // Read the ADC value and update the PWM duty cycle
+     
+    OCR1A = ADC;  // dutycycle value equals provided by adc
+    Serial.println(ADC);
+     
+    ADCSRA |= (1 << ADSC);  // WORKING WHEN MANUALLY START
+}
