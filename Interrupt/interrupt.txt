@@ -1,0 +1,63 @@
+// Pointers to hardware registers
+volatile char *dirf, *outf, *sreg;
+int i=0;
+void timerSetup();
+void setup() {
+  // Initialize timer
+  timerSetup();
+  Serial.begin(9600);
+}
+
+void timerSetup() {
+   // Correct type and address casting
+   volatile short *timer_TCCR1A =  0x80;
+   volatile short *timer_TCCR1B =  0x81;
+   volatile short *timer_TCNT1 =  0x84;
+   volatile short *timer_OCR1B =  0x8A;
+   volatile short *timer_TIMSK1 =  0x6F;
+   
+   // Set Port F direction to output
+   dirf =  0x30; 
+   *dirf = 0xFF; // Set all pins to output
+  
+   // Set up output register
+   outf =  0x31;
+   *outf =0x00; // Initially turn off LED connected to Port F pin 0
+
+   // Configure Timer1
+   *timer_TCCR1A = 0;    // NORMAL MODE
+   *timer_TCCR1B = 0;        
+   *timer_TCCR1B =  (1<<CS12);  //  PRESCALER 256     
+   *timer_TCNT1 = 0;       
+   *timer_OCR1B = 62500;   //formula -> ticks = time *  fcl/prescaler
+   *timer_TIMSK1 = (1<<OCIE1B);          
+
+   // Enable global interrupts
+   sreg =  0x5F;
+   *sreg |= 1 << 7; // Set global interrupt flag
+   
+}
+
+ISR(TIMER1_COMPB_vect) {
+  // Toggle LED connected to Port F pin 0
+  volatile short *timer_TCNT1 =  0x84;
+  volatile short *dirk =  0x107;
+  volatile short *ink=  0x106;
+  *dirk = 0x00;
+  i=0;
+  
+  *outf ^= 0x01;
+ 
+  // Reset the counter to 0
+ // volatile uint16_t *timer_TCNT1 = (uint16_t *) 0x84;
+ *timer_TCNT1 = 0;
+}
+
+void loop() {
+  // Main loop
+   volatile short *timer_TCNT1 =  0x84;
+  
+  if(*timer_TCNT1 ==0){
+    Serial.println("yes");
+  }
+}
