@@ -1,0 +1,229 @@
+volatile char *dirf,*dirk,*dira,*dirc,*outF,*outK,*outa,*outc;
+
+void setup() {
+  // put your setup code here, to run once:
+  outF = 0x31;
+  outK = 0x108;
+  outa = 0x22;
+  outc = 0x28;
+  dira=0x21; *dira=0xff;
+  dirc=0x27; *dirc=0xff;
+  dirf=0x30; *dirf=0xff;
+  dirk=0x107; *dirk=0xff;
+
+  *outF = 0x3F;
+  *outK = 0x3F;
+  *outa = 0x3F;
+  *outc = 0x3F;
+}
+void zero(char *value){
+*value = 0x3F;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+void one(char *value){
+  *value = 0x06;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+void two(char *value){
+*value = 0x5B;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+void three(char *value){
+  *value = 0x4F;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+
+}
+void four(char *value){
+ *value= 0x66;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+
+void five(char *value){
+  *value = 0x6D;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+
+void six(char *value){
+  *value  = 0x7D;
+  for(volatile long int j= 0;j<300000;j++);
+  
+  return;
+}
+
+void seven(char *value){
+*value = 0x07;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+
+}
+
+void eight(char *value){
+  *value = 0x7F;
+  for(volatile long int j= 0;j<300000;j++);
+  return;
+}
+
+void nine(char *value){
+  *value = 0x67;
+  for(volatile long int j= 0;j<300000;j++);
+
+  return;
+}
+
+
+void loop() {
+  for(int a = 0;a<10;a++){
+    *outK = 0x3F;
+    switch(a){
+    case 0:
+    
+    zero(outF);
+
+    break;
+    case 1:
+    
+    one(outF);
+    break;
+    case 2:
+    two(outF);
+    break;
+    case 3:
+    three(outF);
+    break;
+    case 4:
+    four(outF);
+    break;
+    case 5:
+    five(outF);
+    break;
+    case 6:
+    six(outF);
+    break;
+    case 7:
+    seven(outF);
+    break;
+    case 8:
+    eight(outF);
+    break;
+    case 9:
+    nine(outF);
+    
+    break;
+  }
+  for(int b = 0;b<10;b++){
+    *outa = 0x3F;
+    switch(b){
+    case 0:
+    
+    zero(outK);
+
+    break;
+    case 1:
+    
+    one(outK);
+    break;
+    case 2:
+    two(outK);
+    break;
+    case 3:
+    three(outK);
+    break;
+    case 4:
+    four(outK);
+    break;
+    case 5:
+    five(outK);
+    break;
+    case 6:
+    six(outK);
+    break;
+    case 7:
+    seven(outK);
+    break;
+    case 8:
+    eight(outK);
+    break;
+    case 9:
+    nine(outK);
+    
+    break;
+  }
+  for(int c=0;c<6;c++){
+    *outc = 0x3F;
+    switch(c){
+    case 0:
+    
+    zero(outa);
+
+    break;
+    case 1:
+    
+    one(outa);
+    break;
+    case 2:
+    two(outa);
+    break;
+    case 3:
+    three(outa);
+    break;
+    case 4:
+    four(outa);
+    break;
+    case 5:
+    five(outa);
+    break;
+    case 6:
+    six(outa);
+    break;
+  }
+  for(int d= 0;d<10;d++){
+    
+  switch(d){
+    case 0:
+    
+    zero(outc);
+
+    break;
+    case 1:
+     
+    one(outc);
+    break;
+    case 2:
+    two(outc);
+    break;
+    case 3:
+    three(outc);
+    break;
+    case 4:
+    four(outc);
+    break;
+    case 5:
+    five(outc);
+    break;
+    case 6:
+    six(outc);
+    break;
+    case 7:
+    seven(outc);
+    break;
+    case 8:
+    eight(outc);
+    break;
+    case 9:
+    nine(outc);
+
+    break;
+  }
+
+  }
+}
+  }
+  }
+
+}
