@@ -1,0 +1,72 @@
+#include "i2c.h"
+#define LCD_ADDR 0x27 // Check if this is the correct address for the LCD
+#define LCD_ENABLE 0x04
+#define LCD_RS 0x01
+#define backlight 0x08
+
+
+void LCD_send(char data, char mode) {
+    char high_nibble = data & 0xF0;
+    char low_nibble = (data << 4) & 0xF0;
+    
+    // Start I2C session
+    I2C_start();
+    I2C_write(LCD_ADDR << 1); // Address + Write
+    
+    // Send higher nibble with RS (mode)
+    I2C_write(high_nibble | mode | LCD_ENABLE | backlight); // Enable high
+    I2C_write(high_nibble | mode | backlight); // Disable high
+    
+    // Small delay between nibbles
+    delay(1);
+    
+    // Send lower nibble with RS (mode)
+    I2C_write(low_nibble | mode | LCD_ENABLE | backlight); // Enable low
+    I2C_write(low_nibble | mode | backlight); // Disable low
+    
+    // Stop I2C session
+    I2C_stop();
+    
+    delay(1); // Small delay
+}
+
+void LCD_command(char command) {
+    LCD_send(command, 0); // RS = 0 for command
+    delay(1); // Some commands require a delay
+}
+
+void LCD_init() {
+  char data;
+  delay(1); // Wait for LCD to power up
+    
+    // Initialize LCD in 4-bit mode
+    LCD_command(0x33);
+    // Initialization sequence part 1
+    LCD_command(0x32); // Initialization sequence part 2
+    LCD_command(0x28); // 4-bit mode, 2 lines, 5x8 format
+    
+    // Display settings
+    LCD_command(0x0F); // Display ON, Cursor OFF
+    LCD_command(0x06); // Entry mode set, increment cursor
+    LCD_command(0x01); // Clear display
+    delay(1);      // Wait for clear display
+}
+
+void LCD_print(char text[]) {
+  int i=0;
+    while (text[i]!=0) {
+        LCD_send(text[i], LCD_RS); // Send data with RS = 1 (data mode)
+        i++;
+    }
+}
+
+void setup() {
+    LCD_init();
+    Serial.begin(9600);
+    // Print message on LCD
+    LCD_print("AMAN SAXENA");
+}
+
+void loop() {
+    // Main loop
+}
